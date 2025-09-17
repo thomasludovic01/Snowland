@@ -1,24 +1,21 @@
 // --- ‼️ YOU ONLY NEED TO EDIT THIS SECTION ‼️ ---
 const players = [
-    { id: "nasra", name: "Nasra", avatar: "avatars/nasra.png", sqo: 0, partnerSqo: 0, weeklyWins: 0 },
-    { id: "clement", name: "Clement", avatar: "avatars/clement.png", sqo: 0, partnerSqo: 0, weeklyWins: 0 },
-    { id: "ahmad", name: "Ahmad", avatar: "avatars/ahmad.png", sqo: 1, partnerSqo: 0, weeklyWins: 0 },
-    { id: "pouya", name: "Pouya", avatar: "avatars/pouya.png", sqo: 2, partnerSqo: 0, weeklyWins: 0 },
-    { id: "valentin", name: "Valentin", avatar: "avatars/valentin.png", sqo: 1, partnerSqo: 0, weeklyWins: 0 },
-    { id: "mara", name: "Mara", avatar: "avatars/mara.png", sqo: 0, partnerSqo: 0, weeklyWins: 0 },
-    { id: "lylia", name: "Lylia", avatar: "avatars/lylia.png", sqo: 6, partnerSqo: 0, weeklyWins: 0 },
-    { id: "antho", name: "Antho", avatar: "avatars/antho.png", sqo: 0, partnerSqo: 0, weeklyWins: 0 },
+    // CHANGE 1: Added "bonusSteps: 0" to every player
+    { id: "nasra", name: "Nasra", avatar: "avatars/nasra.png", sqo: 0, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
+    { id: "clement", name: "Clement", avatar: "avatars/clement.png", sqo: 0, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
+    { id: "ahmad", name: "Ahmad", avatar: "avatars/ahmad.png", sqo: 1, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
+    { id: "pouya", name: "Pouya", avatar: "avatars/pouya.png", sqo: 2, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
+    { id: "valentin", name: "Valentin", avatar: "avatars/valentin.png", sqo: 1, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
+    { id: "mara", name: "Mara", avatar: "avatars/mara.png", sqo: 0, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
+    { id: "lylia", name: "Lylia", avatar: "avatars/lylia.png", sqo: 5, partnerSqo: 0, weeklyWins: 0, bonusSteps: 3 },
+    { id: "antho", name: "Antho", avatar: "avatars/antho.png", sqo: 0, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
 ];
 
-// TRANSLATED: All special spaces are now in English
 const specialSpaces = {
-    // Dons de la Montagne (Instantanés)
     7: { type: 'good', title: 'Fountain of Youth', description: 'Immediate gain of +3 steps.' },
     24: { type: 'good', title: 'Energy Geyser', description: 'Immediate gain of +5 steps.' },
     28: { type: 'good', title: 'Shortcut of the Ancients', description: 'Gain +2 steps per Echo Bonus won.' },
     31: { type: 'good', title: 'Fountain of Youth', description: 'Immediate gain of +3 steps.' },
-
-    // Faveurs des Anciens (Stratégiques)
     12: { type: 'good', title: 'Altar of Clarity', description: 'Your next Regular SQO is doubled (worth 6 steps).' },
     18: { type: 'good', title: 'The Conqueror\'s Forge', description: 'Your next Partner SQO grants +3 extra steps (10 total).' },
     36: { type: 'good', title: 'The Conqueror\'s Forge', description: 'Your next Partner SQO grants +3 extra steps (10 total).' },
@@ -59,7 +56,6 @@ function createBoardAndLegend() {
 }
 
 function createRulesDisplay() {
-    // TRANSLATED: The rules display is now in English
     scoringRulesContainer.innerHTML = `
         <h3>Point System</h3>
         <ul>
@@ -72,7 +68,8 @@ function createRulesDisplay() {
 
 function calculateAndSortPlayers() {
     players.forEach(player => {
-        player.position = (player.sqo * POINTS_SQO) + (player.partnerSqo * POINTS_PARTNER) + (player.weeklyWins * POINTS_ECHO);
+        // CHANGE 2: The calculation now includes the bonusSteps field
+        player.position = (player.sqo * POINTS_SQO) + (player.partnerSqo * POINTS_PARTNER) + (player.weeklyWins * POINTS_ECHO) + player.bonusSteps;
     });
     players.sort((a, b) => b.position - a.position);
 }
@@ -82,7 +79,16 @@ function updateLeaderboard() {
     players.forEach((player, index) => {
         const row = document.createElement('tr');
         const heroCell = `<div class="hero-cell"><img src="${player.avatar}" alt="${player.name}"><span>${player.name}</span></div>`;
-        row.innerHTML = `<td>${index + 1}</td><td>${heroCell}</td><td>${player.sqo}</td><td>${player.partnerSqo}</td><td>${player.weeklyWins}</td><td><strong>${player.position}</strong></td>`;
+        // CHANGE 3: The table row now includes a cell for bonusSteps
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${heroCell}</td>
+            <td>${player.sqo}</td>
+            <td>${player.partnerSqo}</td>
+            <td>${player.weeklyWins}</td>
+            <td>${player.bonusSteps}</td>
+            <td><strong>${player.position}</strong></td>
+        `;
         leaderboardBody.appendChild(row);
     });
 }
