@@ -86,7 +86,6 @@ h1 {
     align-items: center;
     justify-content: center;
     animation: bobbing 2s ease-in-out infinite;
-    transform: translate(0, 0); /* On réinitialise le translate ici */
 }
 
 .player-sprite img { width: 80%; height: 80%; object-fit: contain; }
