@@ -1,6 +1,6 @@
 body {
     /* NOUVEAU : Arrière-plan avec l'image de la montagne */
-    background-image: url('https://i.imgur.com/8Q0N6jY.jpeg');
+    background-image: url('background.jpg');
     background-size: cover;
     background-position: center center;
     background-attachment: fixed;
