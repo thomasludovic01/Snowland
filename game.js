@@ -1,13 +1,12 @@
 // --- ‼️ YOU ONLY NEED TO EDIT THIS SECTION ‼️ ---
 const players = [
-    // CHANGE 1: Added "bonusSteps: 0" to every player
+    { id: "lylia", name: "Lylia", avatar: "avatars/lylia.png", sqo: 5, partnerSqo: 0, weeklyWins: 0, bonusSteps: 3 },
+    { id: "mara", name: "Mara", avatar: "avatars/mara.png", sqo: 0, partnerSqo: 1, weeklyWins: 0, bonusSteps: 0 },
+    { id: "pouya", name: "Pouya", avatar: "avatars/pouya.png", sqo: 2, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
     { id: "nasra", name: "Nasra", avatar: "avatars/nasra.png", sqo: 1, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
     { id: "clement", name: "Clement", avatar: "avatars/clement.png", sqo: 1, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
     { id: "ahmad", name: "Ahmad", avatar: "avatars/ahmad.png", sqo: 1, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
-    { id: "pouya", name: "Pouya", avatar: "avatars/pouya.png", sqo: 2, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
     { id: "valentin", name: "Valentin", avatar: "avatars/valentin.png", sqo: 1, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
-    { id: "mara", name: "Mara", avatar: "avatars/mara.png", sqo: 0, partnerSqo: 1, weeklyWins: 0, bonusSteps: 0 },
-    { id: "lylia", name: "Lylia", avatar: "avatars/lylia.png", sqo: 5, partnerSqo: 0, weeklyWins: 0, bonusSteps: 3 },
     { id: "antho", name: "Antho", avatar: "avatars/antho.png", sqo: 0, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
 ];
 
@@ -68,7 +67,6 @@ function createRulesDisplay() {
 
 function calculateAndSortPlayers() {
     players.forEach(player => {
-        // CHANGE 2: The calculation now includes the bonusSteps field
         player.position = (player.sqo * POINTS_SQO) + (player.partnerSqo * POINTS_PARTNER) + (player.weeklyWins * POINTS_ECHO) + player.bonusSteps;
     });
     players.sort((a, b) => b.position - a.position);
@@ -79,47 +77,65 @@ function updateLeaderboard() {
     players.forEach((player, index) => {
         const row = document.createElement('tr');
         const heroCell = `<div class="hero-cell"><img src="${player.avatar}" alt="${player.name}"><span>${player.name}</span></div>`;
-        // CHANGE 3: The table row now includes a cell for bonusSteps
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${heroCell}</td>
-            <td>${player.sqo}</td>
-            <td>${player.partnerSqo}</td>
-            <td>${player.weeklyWins}</td>
-            <td>${player.bonusSteps}</td>
-            <td><strong>${player.position}</strong></td>
-        `;
+        row.innerHTML = `<td>${index + 1}</td><td>${heroCell}</td><td>${player.sqo}</td><td>${player.partnerSqo}</td><td>${player.weeklyWins}</td><td>${player.bonusSteps}</td><td><strong>${player.position}</strong></td>`;
         leaderboardBody.appendChild(row);
     });
 }
 
+// MODIFIED: This function now handles grouping and applying offsets
 function createPlayerSprites() {
     spriteLayer.innerHTML = '';
+    
+    // 1. Group players by their current position
+    const playersByPosition = {};
     players.forEach(player => {
-        const sprite = document.createElement('div');
-        sprite.classList.add('player-sprite');
-        sprite.id = `sprite-${player.id}`;
-        const avatarImg = document.createElement('img');
-        avatarImg.src = player.avatar;
-        sprite.appendChild(avatarImg);
-        spriteLayer.appendChild(sprite);
-        moveSprite(player.id, player.position);
+        let position = player.position < 1 ? 1 : player.position;
+        if (position > TOTAL_SPACES) position = TOTAL_SPACES;
+
+        if (!playersByPosition[position]) {
+            playersByPosition[position] = [];
+        }
+        playersByPosition[position].push(player);
     });
+
+    // 2. Create and move sprites for each group
+    for (const position in playersByPosition) {
+        const group = playersByPosition[position];
+        group.forEach((player, index) => {
+            // Create the sprite element
+            const sprite = document.createElement('div');
+            sprite.classList.add('player-sprite');
+            sprite.id = `sprite-${player.id}`;
+            const avatarImg = document.createElement('img');
+            avatarImg.src = player.avatar;
+            sprite.appendChild(avatarImg);
+            spriteLayer.appendChild(sprite);
+            
+            // Move the sprite, passing its index within the group (0 for the first player, 1 for the second, etc.)
+            moveSprite(player.id, parseInt(position), index);
+        });
+    }
 }
 
-function moveSprite(playerId, position) {
+// MODIFIED: This function now accepts a 'stackIndex' to apply an offset
+function moveSprite(playerId, position, stackIndex = 0) {
     const sprite = document.getElementById(`sprite-${playerId}`);
-    let finalPosition = position < 1 ? 1 : position;
-    if (finalPosition > TOTAL_SPACES) finalPosition = TOTAL_SPACES;
-
-    const positionIndex = finalPosition - 1;
+    
+    const positionIndex = position - 1;
     const colIndex = positionIndex % COLUMNS;
     const rowIndex = Math.floor(positionIndex / COLUMNS);
 
     sprite.style.left = `${colIndex * (100 / COLUMNS)}%`;
     sprite.style.top = `${rowIndex * (100 / (TOTAL_SPACES / COLUMNS))}%`;
 
-    const targetSpace = document.getElementById(`space-${finalPosition}`);
+    // This is the new logic: apply a cascading offset based on the player's order on the space
+    const offsetX = stackIndex * 8; // 8 pixels to the right for each additional player
+    const offsetY = stackIndex * 8; // 8 pixels down for each additional player
+    
+    sprite.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    
+    // The landing flash animation remains the same
+    const targetSpace = document.getElementById(`space-${position}`);
     if (targetSpace) {
         targetSpace.classList.add('flash-animation');
         setTimeout(() => { targetSpace.classList.remove('flash-animation'); }, 800);
