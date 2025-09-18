@@ -10,7 +10,16 @@ const players = [
     { id: "antho", name: "Antho", avatar: "avatars/antho.png", sqo: 0, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
 ];
 
-const specialSpaces = { /* ... (no change here) ... */ };
+const specialSpaces = {
+    7: { type: 'good', title: 'Fountain of Youth', description: 'Immediate gain of +3 steps.' },
+    24: { type: 'good', title: 'Energy Geyser', description: 'Immediate gain of +5 steps.' },
+    28: { type: 'good', title: 'Shortcut of the Ancients', description: 'Gain +2 steps per Echo Bonus won.' },
+    31: { type: 'good', title: 'Fountain of Youth', description: 'Immediate gain of +3 steps.' },
+    12: { type: 'good', title: 'Altar of Clarity', description: 'Your next Regular SQO is doubled (worth 6 steps).' },
+    18: { type: 'good', title: 'The Conqueror\'s Forge', description: 'Your next SalesPlay SQO grants +3 extra steps (10 total).' },
+    36: { type: 'good', title: 'The Conqueror\'s Forge', description: 'Your next SalesPlay SQO grants +3 extra steps (10 total).' },
+    41: { type: 'good', title: 'Altar of Clarity', description: 'Your next Regular SQO is doubled (worth 6 steps).' },
+};
 // --- END OF EDIT SECTION ---
 
 
@@ -29,9 +38,30 @@ const scoringRulesContainer = document.getElementById('scoring-rules');
 
 function getZone(spaceNumber) { if (spaceNumber <= 10) return 'zone-plains'; if (spaceNumber <= 20) return 'zone-caves'; if (spaceNumber <= 30) return 'zone-pass'; if (spaceNumber <= 40) return 'zone-forest'; return 'zone-citadel'; }
 
-function createBoardAndLegend() { /* ... (no change here) ... */ }
+function createBoardAndLegend() {
+    board.innerHTML = '';
+    legendList.innerHTML = ''; // Assure que la liste est vide avant de la remplir
 
-// MODIFIED: This function now also creates the prize list
+    for (let i = 1; i <= TOTAL_SPACES; i++) {
+        const space = document.createElement('div');
+        space.classList.add('game-space');
+        space.id = `space-${i}`;
+        space.textContent = i;
+        space.classList.add(getZone(i));
+        if (specialSpaces[i]) { space.classList.add(`special-${specialSpaces[i].type}`); }
+        if (i === TOTAL_SPACES) space.classList.add('finish-space');
+        board.appendChild(space);
+    }
+    
+    // Boucle pour remplir la liste des Espaces Spéciaux
+    for (const spaceNum in specialSpaces) { 
+        const space = specialSpaces[spaceNum]; 
+        const li = document.createElement('li'); 
+        li.innerHTML = `<strong>[${spaceNum}] ${space.title}</strong><span>${space.description}</span>`; 
+        legendList.appendChild(li); 
+    }
+}
+
 function createRulesDisplay() {
     scoringRulesContainer.innerHTML = `
         <div class="rules-section">
@@ -51,28 +81,6 @@ function createRulesDisplay() {
             </ul>
         </div>
     `;
-}
-
-function calculateAndSortPlayers() { /* ... (no change here) ... */ }
-function updateLeaderboard() { /* ... (no change here) ... */ }
-function createPlayerSprites() { /* ... (no change here) ... */ }
-function moveSprite(playerId, position, stackIndex = 0) { /* ... (no change here) ... */ }
-
-// --- Full Code (for safety) ---
-function createBoardAndLegend() {
-    board.innerHTML = '';
-    legendList.innerHTML = '';
-    for (let i = 1; i <= TOTAL_SPACES; i++) {
-        const space = document.createElement('div');
-        space.classList.add('game-space');
-        space.id = `space-${i}`;
-        space.textContent = i;
-        space.classList.add(getZone(i));
-        if (specialSpaces[i]) { space.classList.add(`special-${specialSpaces[i].type}`); }
-        if (i === TOTAL_SPACES) space.classList.add('finish-space');
-        board.appendChild(space);
-    }
-    for (const spaceNum in specialSpaces) { const space = specialSpaces[spaceNum]; const li = document.createElement('li'); li.innerHTML = `<strong>[${spaceNum}] ${space.title}</strong><span>${space.description}</span>`; legendList.appendChild(li); }
 }
 
 function calculateAndSortPlayers() {
