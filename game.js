@@ -10,71 +10,20 @@ const players = [
     { id: "antho", name: "Antho", avatar: "avatars/antho.png", sqo: 0, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
 ];
 
-const specialSpaces = { /* ... (pas de changement ici) ... */ };
+const specialSpaces = {
+    7: { type: 'good', title: 'Fountain of Youth', description: 'Immediate gain of +3 steps.' },
+    24: { type: 'good', title: 'Energy Geyser', description: 'Immediate gain of +5 steps.' },
+    28: { type: 'good', title: 'Shortcut of the Ancients', description: 'Gain +2 steps per Echo Bonus won.' },
+    31: { type: 'good', title: 'Fountain of Youth', description: 'Immediate gain of +3 steps.' },
+    12: { type: 'good', title: 'Altar of Clarity', description: 'Your next Regular SQO is doubled (worth 6 steps).' },
+    18: { type: 'good', title: 'The Conqueror\'s Forge', description: 'Your next SalesPlay SQO grants +3 extra steps (10 total).' },
+    36: { type: 'good', title: 'The Conqueror\'s Forge', description: 'Your next SalesPlay SQO grants +3 extra steps (10 total).' },
+    41: { type: 'good', title: 'Altar of Clarity', description: 'Your next Regular SQO is doubled (worth 6 steps).' },
+};
 // --- END OF EDIT SECTION ---
 
-// ... (le début du code ne change pas) ...
 
-function createPlayerSprites() {
-    spriteLayer.innerHTML = '';
-    const playersByPosition = {};
-    players.forEach(player => {
-        let position = player.position < 1 ? 1 : player.position;
-        if (position > TOTAL_SPACES) position = TOTAL_SPACES;
-        if (!playersByPosition[position]) { playersByPosition[position] = []; }
-        playersByPosition[position].push(player);
-    });
-
-    for (const position in playersByPosition) {
-        const group = playersByPosition[position];
-        group.forEach((player, index) => {
-            // MODIFIÉ : Création de la nouvelle structure
-            const positioner = document.createElement('div');
-            positioner.classList.add('sprite-positioner');
-            positioner.id = `sprite-${player.id}`;
-
-            const animator = document.createElement('div');
-            animator.classList.add('sprite-animator');
-            
-            const avatarImg = document.createElement('img');
-            avatarImg.src = player.avatar;
-            
-            animator.appendChild(avatarImg);
-            positioner.appendChild(animator);
-            spriteLayer.appendChild(positioner);
-            
-            moveSprite(player.id, parseInt(position), index);
-        });
-    }
-}
-
-function moveSprite(playerId, position, stackIndex = 0) {
-    // MODIFIÉ : On cible maintenant le div de positionnement
-    const positioner = document.getElementById(`sprite-${playerId}`);
-    
-    const positionIndex = position - 1;
-    const colIndex = positionIndex % COLUMNS;
-    const rowIndex = Math.floor(positionIndex / COLUMNS);
-
-    positioner.style.left = `${colIndex * (100 / COLUMNS)}%`;
-    positioner.style.top = `${rowIndex * (100 / (TOTAL_SPACES / COLUMNS))}%`;
-
-    const offsetX = stackIndex * 8;
-    const offsetY = stackIndex * 8;
-    
-    // Le décalage est appliqué au div de positionnement
-    positioner.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-    
-    const targetSpace = document.getElementById(`space-${position}`);
-    if (targetSpace) {
-        targetSpace.classList.add('flash-animation');
-        setTimeout(() => { targetSpace.classList.remove('flash-animation'); }, 800);
-    }
-}
-
-// ... (le reste du code ne change pas, il suffit de remplacer la fonction createPlayerSprites et moveSprite)
-// Pour plus de sécurité, voici le fichier complet :
-
+// --- Don't touch the code below this line ---
 const TOTAL_SPACES = 50;
 const COLUMNS = 10;
 const POINTS_SQO = 3;
@@ -106,11 +55,20 @@ function createBoardAndLegend() {
 }
 
 function createRulesDisplay() {
-    scoringRulesContainer.innerHTML = `<h3>Point System</h3><ul><li><strong>Regular SQO:</strong> ${POINTS_SQO} steps</li><li><strong>SalesPlay SQO:</strong> ${POINTS_PARTNER} steps</li><li><strong>Echo Bonus:</strong> ${POINTS_ECHO} steps</li></ul>`;
+    scoringRulesContainer.innerHTML = `
+        <h3>Point System</h3>
+        <ul>
+            <li><strong>Regular SQO:</strong> ${POINTS_SQO} steps</li>
+            <li><strong>SalesPlay SQO:</strong> ${POINTS_PARTNER} steps</li>
+            <li><strong>Echo Bonus:</strong> ${POINTS_ECHO} steps</li>
+        </ul>
+    `;
 }
 
 function calculateAndSortPlayers() {
-    players.forEach(player => { player.position = (player.sqo * POINTS_SQO) + (player.partnerSqo * POINTS_PARTNER) + (player.weeklyWins * POINTS_ECHO) + player.bonusSteps; });
+    players.forEach(player => {
+        player.position = (player.sqo * POINTS_SQO) + (player.partnerSqo * POINTS_PARTNER) + (player.weeklyWins * POINTS_ECHO) + player.bonusSteps;
+    });
     players.sort((a, b) => b.position - a.position);
 }
 
@@ -123,7 +81,68 @@ function updateLeaderboard() {
         leaderboardBody.appendChild(row);
     });
 }
-// La fonction createPlayerSprites et moveSprite sont celles que j'ai détaillées juste au-dessus.
+
+// CORRECTION CLÉ POUR LA CASCADE DES AVATARS
+function createPlayerSprites() {
+    spriteLayer.innerHTML = '';
+    
+    const playersByPosition = {};
+    players.forEach(player => {
+        let position = player.position < 1 ? 1 : player.position;
+        if (position > TOTAL_SPACES) position = TOTAL_SPACES;
+
+        if (!playersByPosition[position]) {
+            playersByPosition[position] = [];
+        }
+        playersByPosition[position].push(player);
+    });
+
+    for (const position in playersByPosition) {
+        const group = playersByPosition[position];
+        group.forEach((player, index) => {
+            // Crée le conteneur de positionnement
+            const positioner = document.createElement('div');
+            positioner.classList.add('sprite-positioner');
+            positioner.id = `sprite-${player.id}`;
+
+            // Crée le conteneur pour l'animation à l'intérieur du positionneur
+            const animator = document.createElement('div');
+            animator.classList.add('sprite-animator');
+            
+            const avatarImg = document.createElement('img');
+            avatarImg.src = player.avatar;
+            
+            animator.appendChild(avatarImg);
+            positioner.appendChild(animator); // L'animateur est enfant du positionneur
+            spriteLayer.appendChild(positioner);
+            
+            moveSprite(player.id, parseInt(position), index);
+        });
+    }
+}
+
+function moveSprite(playerId, position, stackIndex = 0) {
+    const positioner = document.getElementById(`sprite-${playerId}`); // On cible le positioner
+    
+    const positionIndex = position - 1;
+    const colIndex = positionIndex % COLUMNS;
+    const rowIndex = Math.floor(positionIndex / COLUMNS);
+
+    positioner.style.left = `${colIndex * (100 / COLUMNS)}%`;
+    positioner.style.top = `${rowIndex * (100 / (TOTAL_SPACES / COLUMNS))}%`;
+
+    const offsetX = stackIndex * 8;
+    const offsetY = stackIndex * 8;
+    
+    positioner.style.transform = `translate(${offsetX}px, ${offsetY}px)`; // Le translate est sur le positioner
+    
+    const targetSpace = document.getElementById(`space-${position}`);
+    if (targetSpace) {
+        targetSpace.classList.add('flash-animation');
+        setTimeout(() => { targetSpace.classList.remove('flash-animation'); }, 800);
+    }
+}
+// FIN DES CORRECTIONS
 
 // --- Main execution ---
 createBoardAndLegend();
