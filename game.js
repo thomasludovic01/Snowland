@@ -6,7 +6,7 @@ const players = [
     { id: "ahmad", name: "Ahmad", avatar: "avatars/ahmad.png", sqo: 1, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
     { id: "pouya", name: "Pouya", avatar: "avatars/pouya.png", sqo: 2, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
     { id: "valentin", name: "Valentin", avatar: "avatars/valentin.png", sqo: 1, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
-    { id: "mara", name: "Mara", avatar: "avatars/mara.png", sqo: 1, partnerSqo: 1, weeklyWins: 0, bonusSteps: 0 },
+    { id: "mara", name: "Mara", avatar: "avatars/mara.png", sqo: 0, partnerSqo: 1, weeklyWins: 0, bonusSteps: 0 },
     { id: "lylia", name: "Lylia", avatar: "avatars/lylia.png", sqo: 5, partnerSqo: 0, weeklyWins: 0, bonusSteps: 3 },
     { id: "antho", name: "Antho", avatar: "avatars/antho.png", sqo: 0, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
 ];
@@ -17,8 +17,8 @@ const specialSpaces = {
     28: { type: 'good', title: 'Shortcut of the Ancients', description: 'Gain +2 steps per Echo Bonus won.' },
     31: { type: 'good', title: 'Fountain of Youth', description: 'Immediate gain of +3 steps.' },
     12: { type: 'good', title: 'Altar of Clarity', description: 'Your next Regular SQO is doubled (worth 6 steps).' },
-    18: { type: 'good', title: 'The Conqueror\'s Forge', description: 'Your next Partner SQO grants +3 extra steps (10 total).' },
-    36: { type: 'good', title: 'The Conqueror\'s Forge', description: 'Your next Partner SQO grants +3 extra steps (10 total).' },
+    18: { type: 'good', title: 'The Conqueror\'s Forge', description: 'Your next SalesPlay SQO grants +3 extra steps (10 total).' },
+    36: { type: 'good', title: 'The Conqueror\'s Forge', description: 'Your next SalesPlay SQO grants +3 extra steps (10 total).' },
     41: { type: 'good', title: 'Altar of Clarity', description: 'Your next Regular SQO is doubled (worth 6 steps).' },
 };
 // --- END OF EDIT SECTION ---
@@ -60,7 +60,7 @@ function createRulesDisplay() {
         <h3>Point System</h3>
         <ul>
             <li><strong>Regular SQO:</strong> ${POINTS_SQO} steps</li>
-            <li><strong>Partner SQO:</strong> ${POINTS_PARTNER} steps</li>
+            <li><strong>SalesPlay SQO:</strong> ${POINTS_PARTNER} steps</li>
             <li><strong>Echo Bonus:</strong> ${POINTS_ECHO} steps</li>
         </ul>
     `;
