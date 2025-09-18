@@ -1,11 +1,9 @@
 body {
-    /* NOUVEAU : Arrière-plan avec l'image de la montagne */
-    background-image: url('background.jpg');
+    background-image: url('https://i.imgur.com/8Q0N6jY.jpeg');
     background-size: cover;
     background-position: center center;
     background-attachment: fixed;
     background-repeat: no-repeat;
-    
     background-color: #1a2a3a;
     color: #ffffff;
     font-family: 'Press Start 2P', cursive;
@@ -16,105 +14,55 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    /* NOUVEAU : Léger fond semi-transparent pour améliorer la lisibilité */
     background-color: rgba(13, 26, 38, 0.6);
     padding: 20px;
     border-radius: 10px;
 }
 
-h1 {
-    color: #4dd0e1;
-    text-shadow: 3px 3px 2px #000; /* Ombre renforcée */
-    font-size: 2.5em;
-}
+h1 { color: #4dd0e1; text-shadow: 3px 3px 2px #000; font-size: 2.5em; }
+.subtitle { color: #b2ebf2; font-size: 1em; margin-bottom: 40px; text-shadow: 2px 2px 2px #000; }
 
-.subtitle {
-    color: #b2ebf2;
-    font-size: 1em;
-    margin-bottom: 40px;
-    text-shadow: 2px 2px 2px #000; /* Ombre renforcée */
-}
+#game-board-container { position: relative; width: 100%; margin: 0 auto; background-image: url('https://www.transparenttextures.com/patterns/rocky-wall.png'); background-color: #263238; border: 4px solid #4dd0e1; padding: 10px; box-sizing: border-box; }
+#game-board { display: grid; grid-template-columns: repeat(10, 1fr); grid-template-rows: repeat(5, 1fr); gap: 5px; height: 300px; }
+#sprite-layer { position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; pointer-events: none; }
+.game-space { color: rgba(255, 255, 255, 0.8); font-size: 1em; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; background-color: rgba(0, 0, 0, 0.4); border-top: 3px solid rgba(255, 255, 255, 0.2); border-left: 3px solid rgba(255, 255, 255, 0.2); border-right: 3px solid rgba(0, 0, 0, 0.2); border-bottom: 3px solid rgba(0, 0, 0, 0.2); }
 
-#game-board-container {
-    position: relative;
-    width: 100%;
-    margin: 0 auto;
-    background-image: url('https://www.transparenttextures.com/patterns/rocky-wall.png');
-    background-color: #263238;
-    border: 4px solid #4dd0e1;
-    padding: 10px;
-    box-sizing: border-box;
-}
-
-#game-board {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    gap: 5px;
-    height: 300px;
-}
-
-#sprite-layer {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    pointer-events: none;
-}
-
-.game-space {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 1em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    background-color: rgba(0, 0, 0, 0.4);
-    border-top: 3px solid rgba(255, 255, 255, 0.2);
-    border-left: 3px solid rgba(255, 255, 255, 0.2);
-    border-right: 3px solid rgba(0, 0, 0, 0.2);
-    border-bottom: 3px solid rgba(0, 0, 0, 0.2);
-}
-
-.player-sprite {
+/* MODIFIÉ : Séparation de la position et de l'animation */
+.sprite-positioner {
     position: absolute;
     width: 10%;
     height: 20%;
     transition: all 0.5s ease-in-out;
+}
+.sprite-animator {
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     animation: bobbing 2s ease-in-out infinite;
 }
+.sprite-animator img { width: 80%; height: 80%; object-fit: contain; }
+/* FIN DES MODIFICATIONS */
 
-.player-sprite img { width: 80%; height: 80%; object-fit: contain; }
 .zone-plains { border-bottom-color: #a5d6a7; }
 .zone-caves { border-bottom-color: #90caf9; }
 .zone-pass { border-bottom-color: #eeeeee; }
 .zone-forest { border-bottom-color: #81c784; }
 .zone-citadel { border-bottom-color: #4dd0e1; }
-
 .finish-space { background-image: linear-gradient(45deg, #ffd700, #f0c700, #daa520, #ffd700); color: #000; font-weight: bold; border-color: #FFF; box-shadow: 0 0 15px #ffd700; }
 .special-good { border: 3px solid #81c784; box-shadow: 0 0 10px #81c784; background-color: rgba(129, 199, 132, 0.2); }
 
 .bottom-section { display: flex; margin-top: 40px; gap: 20px; text-align: left; }
-#leaderboard { flex-grow: 3; background-color: #0d1a26; border: 4px solid #4dd0e1; padding: 20px; }
-#legend { flex-grow: 2; background-color: #0d1a26; border: 4px solid #4dd0e1; padding: 20px; }
+
+/* MODIFIÉ : Rééquilibrage des colonnes */
+#leaderboard { flex-grow: 4; background-color: #0d1a26; border: 4px solid #4dd0e1; padding: 20px; }
+#legend { flex-grow: 3; background-color: #0d1a26; border: 4px solid #4dd0e1; padding: 20px; }
 
 #leaderboard table { width: 100%; border-collapse: collapse; }
-
-/* MODIFIÉ : Texte centré pour les colonnes */
-#leaderboard th, #leaderboard td {
-    padding: 10px;
-    border-bottom: 2px solid #37474f;
-    text-align: center;
-    vertical-align: middle;
-}
-
+#leaderboard th, #leaderboard td { padding: 10px; border-bottom: 2px solid #37474f; text-align: center; vertical-align: middle; }
 #leaderboard th { color: #4dd0e1; }
-
-.hero-cell { display: flex; align-items: center; }
+.hero-cell { display: flex; align-items: center; justify-content: center; } /* Centrage du contenu */
 .hero-cell img { width: 30px; height: 30px; margin-right: 15px; }
 
 #legend h3 { color: #4dd0e1; font-size: 0.9em; margin-top: 0; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid #37474f; }
@@ -122,7 +70,6 @@ h1 {
 #scoring-rules ul { list-style: none; padding: 0; }
 #scoring-rules li { display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.9em; }
 #scoring-rules li strong { color: #b2ebf2; }
-
 #legend ul { list-style: none; padding: 0; }
 #legend li { padding: 8px 0; border-bottom: 2px solid #37474f; }
 #legend li:last-child { border-bottom: none; }
