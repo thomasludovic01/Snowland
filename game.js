@@ -10,16 +10,7 @@ const players = [
     { id: "antho", name: "Antho", avatar: "avatars/antho.png", sqo: 0, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
 ];
 
-const specialSpaces = {
-    7: { type: 'good', title: 'Fountain of Youth', description: 'Immediate gain of +3 steps.' },
-    24: { type: 'good', title: 'Energy Geyser', description: 'Immediate gain of +5 steps.' },
-    28: { type: 'good', title: 'Shortcut of the Ancients', description: 'Gain +2 steps per Echo Bonus won.' },
-    31: { type: 'good', title: 'Fountain of Youth', description: 'Immediate gain of +3 steps.' },
-    12: { type: 'good', title: 'Altar of Clarity', description: 'Your next Regular SQO is doubled (worth 6 steps).' },
-    18: { type: 'good', title: 'The Conqueror\'s Forge', description: 'Your next SalesPlay SQO grants +3 extra steps (10 total).' },
-    36: { type: 'good', title: 'The Conqueror\'s Forge', description: 'Your next SalesPlay SQO grants +3 extra steps (10 total).' },
-    41: { type: 'good', title: 'Altar of Clarity', description: 'Your next Regular SQO is doubled (worth 6 steps).' },
-};
+const specialSpaces = { /* ... (no change here) ... */ };
 // --- END OF EDIT SECTION ---
 
 
@@ -38,6 +29,36 @@ const scoringRulesContainer = document.getElementById('scoring-rules');
 
 function getZone(spaceNumber) { if (spaceNumber <= 10) return 'zone-plains'; if (spaceNumber <= 20) return 'zone-caves'; if (spaceNumber <= 30) return 'zone-pass'; if (spaceNumber <= 40) return 'zone-forest'; return 'zone-citadel'; }
 
+function createBoardAndLegend() { /* ... (no change here) ... */ }
+
+// MODIFIED: This function now also creates the prize list
+function createRulesDisplay() {
+    scoringRulesContainer.innerHTML = `
+        <div class="rules-section">
+            <h3>Point System</h3>
+            <ul>
+                <li><strong>Regular SQO:</strong> ${POINTS_SQO} steps</li>
+                <li><strong>SalesPlay SQO:</strong> ${POINTS_PARTNER} steps</li>
+                <li><strong>Echo Bonus:</strong> ${POINTS_ECHO} steps</li>
+            </ul>
+        </div>
+        <div class="rules-section">
+            <h3>Prizes</h3>
+            <ul>
+                <li><strong>1st Place:</strong> $700</li>
+                <li><strong>2nd Place:</strong> $400</li>
+                <li><strong>3rd Place:</strong> $200</li>
+            </ul>
+        </div>
+    `;
+}
+
+function calculateAndSortPlayers() { /* ... (no change here) ... */ }
+function updateLeaderboard() { /* ... (no change here) ... */ }
+function createPlayerSprites() { /* ... (no change here) ... */ }
+function moveSprite(playerId, position, stackIndex = 0) { /* ... (no change here) ... */ }
+
+// --- Full Code (for safety) ---
 function createBoardAndLegend() {
     board.innerHTML = '';
     legendList.innerHTML = '';
@@ -52,17 +73,6 @@ function createBoardAndLegend() {
         board.appendChild(space);
     }
     for (const spaceNum in specialSpaces) { const space = specialSpaces[spaceNum]; const li = document.createElement('li'); li.innerHTML = `<strong>[${spaceNum}] ${space.title}</strong><span>${space.description}</span>`; legendList.appendChild(li); }
-}
-
-function createRulesDisplay() {
-    scoringRulesContainer.innerHTML = `
-        <h3>Point System</h3>
-        <ul>
-            <li><strong>Regular SQO:</strong> ${POINTS_SQO} steps</li>
-            <li><strong>SalesPlay SQO:</strong> ${POINTS_PARTNER} steps</li>
-            <li><strong>Echo Bonus:</strong> ${POINTS_ECHO} steps</li>
-        </ul>
-    `;
 }
 
 function calculateAndSortPlayers() {
@@ -82,67 +92,49 @@ function updateLeaderboard() {
     });
 }
 
-// CORRECTION CLÉ POUR LA CASCADE DES AVATARS
 function createPlayerSprites() {
     spriteLayer.innerHTML = '';
-    
     const playersByPosition = {};
     players.forEach(player => {
         let position = player.position < 1 ? 1 : player.position;
         if (position > TOTAL_SPACES) position = TOTAL_SPACES;
-
-        if (!playersByPosition[position]) {
-            playersByPosition[position] = [];
-        }
+        if (!playersByPosition[position]) { playersByPosition[position] = []; }
         playersByPosition[position].push(player);
     });
-
     for (const position in playersByPosition) {
         const group = playersByPosition[position];
         group.forEach((player, index) => {
-            // Crée le conteneur de positionnement
             const positioner = document.createElement('div');
             positioner.classList.add('sprite-positioner');
             positioner.id = `sprite-${player.id}`;
-
-            // Crée le conteneur pour l'animation à l'intérieur du positionneur
             const animator = document.createElement('div');
             animator.classList.add('sprite-animator');
-            
             const avatarImg = document.createElement('img');
             avatarImg.src = player.avatar;
-            
             animator.appendChild(avatarImg);
-            positioner.appendChild(animator); // L'animateur est enfant du positionneur
+            positioner.appendChild(animator);
             spriteLayer.appendChild(positioner);
-            
             moveSprite(player.id, parseInt(position), index);
         });
     }
 }
 
 function moveSprite(playerId, position, stackIndex = 0) {
-    const positioner = document.getElementById(`sprite-${playerId}`); // On cible le positioner
-    
+    const positioner = document.getElementById(`sprite-${playerId}`);
     const positionIndex = position - 1;
     const colIndex = positionIndex % COLUMNS;
     const rowIndex = Math.floor(positionIndex / COLUMNS);
-
     positioner.style.left = `${colIndex * (100 / COLUMNS)}%`;
     positioner.style.top = `${rowIndex * (100 / (TOTAL_SPACES / COLUMNS))}%`;
-
     const offsetX = stackIndex * 8;
     const offsetY = stackIndex * 8;
-    
-    positioner.style.transform = `translate(${offsetX}px, ${offsetY}px)`; // Le translate est sur le positioner
-    
+    positioner.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
     const targetSpace = document.getElementById(`space-${position}`);
     if (targetSpace) {
         targetSpace.classList.add('flash-animation');
         setTimeout(() => { targetSpace.classList.remove('flash-animation'); }, 800);
     }
 }
-// FIN DES CORRECTIONS
 
 // --- Main execution ---
 createBoardAndLegend();
