@@ -1,12 +1,12 @@
 // --- ‼️ YOU ONLY NEED TO EDIT THIS SECTION ‼️ ---
 const players = [
     // CHANGE 1: Added "bonusSteps: 0" to every player
-    { id: "nasra", name: "Nasra", avatar: "avatars/nasra.png", sqo: 0, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
-    { id: "clement", name: "Clement", avatar: "avatars/clement.png", sqo: 0, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
+    { id: "nasra", name: "Nasra", avatar: "avatars/nasra.png", sqo: 1, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
+    { id: "clement", name: "Clement", avatar: "avatars/clement.png", sqo: 1, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
     { id: "ahmad", name: "Ahmad", avatar: "avatars/ahmad.png", sqo: 1, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
     { id: "pouya", name: "Pouya", avatar: "avatars/pouya.png", sqo: 2, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
     { id: "valentin", name: "Valentin", avatar: "avatars/valentin.png", sqo: 1, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
-    { id: "mara", name: "Mara", avatar: "avatars/mara.png", sqo: 0, partnerSqo: 1, weeklyWins: 0, bonusSteps: 0 },
+    { id: "mara", name: "Mara", avatar: "avatars/mara.png", sqo: 1, partnerSqo: 1, weeklyWins: 0, bonusSteps: 0 },
     { id: "lylia", name: "Lylia", avatar: "avatars/lylia.png", sqo: 5, partnerSqo: 0, weeklyWins: 0, bonusSteps: 3 },
     { id: "antho", name: "Antho", avatar: "avatars/antho.png", sqo: 0, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
 ];
