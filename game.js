@@ -1,7 +1,7 @@
 // --- ‼️ YOU ONLY NEED TO EDIT THIS SECTION ‼️ ---
 const players = [
     { id: "lylia", name: "Lylia", avatar: "avatars/lylia.png", sqo: 6, partnerSqo: 0, weeklyWins: 0, bonusSteps: 3 },
-    { id: "mara", name: "Mara", avatar: "avatars/mara.png", sqo: 0, partnerSqo: 1, weeklyWins: 0, bonusSteps: 3 },
+    { id: "mara", name: "Mara", avatar: "avatars/mara.png", sqo: 2, partnerSqo: 2, weeklyWins: 0, bonusSteps: 3 },
     { id: "pouya", name: "Pouya", avatar: "avatars/pouya.png", sqo: 4, partnerSqo: 1, weeklyWins: 2, bonusSteps: 0 },
     { id: "nasra", name: "Nasra", avatar: "avatars/nasra.png", sqo: 2, partnerSqo: 1, weeklyWins: 0, bonusSteps: 3 },
     { id: "clement", name: "Clement", avatar: "avatars/clement.png", sqo: 1, partnerSqo: 0, weeklyWins: 0, bonusSteps: 0 },
