@@ -4,7 +4,7 @@ const players = [
     { id: "mara", name: "Mara", avatar: "avatars/mara.png", sqo: 4, partnerSqo: 6, weeklyWins: 0, bonusSteps: 3 },
     { id: "pouya", name: "Pouya", avatar: "avatars/pouya.png", sqo: 5, partnerSqo: 4, weeklyWins: 2, bonusSteps: 3 },
     { id: "nasra", name: "Nasra", avatar: "avatars/nasra.png", sqo: 2, partnerSqo: 4, weeklyWins: 0, bonusSteps: 6 },
-    { id: "clement", name: "Clement", avatar: "avatars/clement.png", sqo: 6, partnerSqo: 0, weeklyWins: 0, bonusSteps: 6 },
+    { id: "clement", name: "Clement", avatar: "avatars/clement.png", sqo: 6, partnerSqo: 0, weeklyWins: 0, bonusSteps: 11 },
     { id: "ahmad", name: "Ahmad", avatar: "avatars/ahmad.png", sqo: 2, partnerSqo: 1, weeklyWins: 0, bonusSteps: 0 },
     { id: "valentin", name: "Valentin", avatar: "avatars/valentin.png", sqo: 3, partnerSqo: 6, weeklyWins: 0, bonusSteps: 0 },
     { id: "antho", name: "Antho", avatar: "avatars/antho.png", sqo: 3, partnerSqo: 1, weeklyWins: 0, bonusSteps: 0 },
